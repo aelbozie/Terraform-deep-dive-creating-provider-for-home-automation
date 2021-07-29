@@ -4,32 +4,15 @@ anywhere you see `<URL>` change to your instance url (or localhost if not remote
 
 anywhere you see `<NAME>` change to a username (no spaces)
 
-## 0. Setup Info
-
-On the playground day go to `https://lab.devopsplayground.org/`
-
-open
-
-
-- Terminal
-
-`<url>/wetty` 
- run `cd ~/workdir/Terraform-deep-dive-creating-provider-for-home-automation`
-
-
-- IDE if dont want to use vim to edit files
-
-
-`<url>:8000`
-
 ## 1. Set up the home-assistant instance
 
 If using the Playgrounds infrastruture skip to step 3.
 
-3. Go to `URL:8123`
-4. Make account - not https so don't use an important password
+1. run `docker-compose up -d`
+2. Go to `localhost:8123`
+3. Make account - not https so don't use an important password
    (location and name doesn't matter)
-5. Click finish
+4. Click finish
 
 ## 2. get an api key
 
@@ -192,7 +175,7 @@ func resourceLightCreate(ctx context.Context, d *schema.ResourceData, m interfac
 
 - run `sh build.sh <NAME> 0.0.1` remember to change `<NAME>` to your panda name 
     - Will through an error, but the light will be created
-- If you now go back to `URL:8123`, you should see a light appear
+- If you now go back to `localhost:8123`, you should see a light appear
 
 ## 8. Saving the state
 
@@ -269,7 +252,7 @@ func resourceLightDelete(ctx context.Context, d *schema.ResourceData, m interfac
 - You might have to delete `"fmt"` at the top of the file as we are no longer using the go model
 - If you now run `sh build.sh <NAME> 0.0.1` to build the latest code
 - Then run `terraform destroy` to destroy the light
-- Check `URL:8123` and you should see the light no longer there
+- Check `localhost:8123` and you should see the light no longer there
 
 ## 11. Extra fun
 

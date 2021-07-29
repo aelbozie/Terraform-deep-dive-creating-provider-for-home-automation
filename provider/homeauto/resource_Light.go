@@ -2,7 +2,6 @@ package homeauto
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -78,18 +77,54 @@ func resourceLight() *schema.Resource {
 	}
 }
 func resourceLightCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
-	return diag.FromErr(fmt.Errorf("Not SetUP"))
+	c := m.(*Client)
+	item := LightItem{
+		EntityID: d.Get("entity_id").(string),
+		State:    d.Get("state").(string),
+	}
+	err := StartLight(item, *c)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId(item.EntityID)
+	return resourceLightRead(ctx, d, m)
 }
 func resourceLightRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	var diags diag.Diagnostics
+	lightID := d.Id()
 
-	return diag.FromErr(fmt.Errorf("Not SetUP"))
+	light, err := GetLight(lightID, *c)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("state", light.State); err != nil {
+		return diag.FromErr(err)
+	}
+	return diags
 }
 func resourceLightUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	item := LightItem{
+		EntityID: d.Get("entity_id").(string),
+		State:    d.Get("state").(string),
+	}
 
-	return diag.FromErr(fmt.Errorf("Not SetUP"))
+	err := StartLight(item, *c)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	return resourceLightRead(ctx, d, m)
 }
 func resourceLightDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	var diags diag.Diagnostics
+	lightID := d.Id()
 
-	return diag.FromErr(fmt.Errorf("Not SetUP"))
+	err := DeleteLight(lightID, *c)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId("")
+	return diags
 }
